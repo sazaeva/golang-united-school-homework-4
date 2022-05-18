@@ -2,6 +2,8 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
+	"strconv"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -22,6 +24,36 @@ var (
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
-func StringSum(input string) (output string, err error) {
-	return "", nil
+func StringSum(input string) (string, error) {
+	n := ""
+	s := []int{}
+	set := 0
+	output := 0
+	for i, aR := range input {
+		if aR >= 48 && aR <= 58 {
+			n += fmt.Sprint(int(aR - 48))
+			set = 1
+		} else if set == 1 {
+			w, err := strconv.Atoi(n)
+			fmt.Println(errorNotTwoOperands)
+			if err != nil {
+				fmt.Println(errorEmptyInput)
+			}
+			fmt.Println(w)
+			s = append(s, w)
+			n = ""
+			set = 0
+		}
+		if i == len(input)-1 {
+			w, _ := strconv.Atoi(n)
+			fmt.Println(w)
+			s = append(s, w)
+		}
+	}
+	for _, sR := range s {
+		output += sR
+	}
+
+	return string(output), nil
+
 }
