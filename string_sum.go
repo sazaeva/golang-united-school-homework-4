@@ -24,11 +24,11 @@ var (
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
-func StringSum(input string) (string, error) {
+func StringSum(input string) (output string, err error) {
 	n := ""
 	s := []int{}
 	set := 0
-	output := 0
+	out := 0
 	for i, aR := range input {
 		if aR >= 48 && aR <= 58 {
 			n += fmt.Sprint(int(aR - 48))
@@ -51,9 +51,10 @@ func StringSum(input string) (string, error) {
 		}
 	}
 	for _, sR := range s {
-		output += sR
+		out += sR
+		output = strconv.Itoa(out)
 	}
 
-	return string(output), nil
+	return "", nil
 
 }
