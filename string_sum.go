@@ -46,7 +46,7 @@ func StringSum(input string) (output string, err error) {
 		}
 		if i == len(input)-1 {
 			w, _ := strconv.Atoi(n)
-		
+
 			s = append(s, w)
 		}
 	}
@@ -55,6 +55,6 @@ func StringSum(input string) (output string, err error) {
 		output = strconv.Itoa(out)
 	}
 
-	return "", nil
+	return output, nil
 
 }
