@@ -39,14 +39,14 @@ func StringSum(input string) (output string, err error) {
 			if err != nil {
 				fmt.Println(errorEmptyInput)
 			}
-			fmt.Println(w)
+
 			s = append(s, w)
 			n = ""
 			set = 0
 		}
 		if i == len(input)-1 {
 			w, _ := strconv.Atoi(n)
-			fmt.Println(w)
+		
 			s = append(s, w)
 		}
 	}
