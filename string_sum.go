@@ -2,6 +2,7 @@ package string_sum
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -28,7 +29,9 @@ func StringSum(input string) (output string, err error) {
 	input = strings.ReplaceAll(input, " ", "")
 
 	if input == "" || input == "-" || input == "+" {
-		return input, errorEmptyInput
+		if err != nil {
+			return input, fmt.Errorf("%w", errorEmptyInput)
+		}
 	}
 
 	var container string
@@ -36,8 +39,10 @@ func StringSum(input string) (output string, err error) {
 	n := 1
 
 	for i, v := range input {
-		if i == 0 && v == 43 || v > 58 {
-			return "", errorNotTwoOperands
+		if i == 0 && v == 43 || v > 57 || len(input) > 1 {
+			if err != nil {
+				return "", fmt.Errorf("%w", errorNotTwoOperands)
+			}
 		}
 
 		if i == 0 && v == 45 { // first character is minus
@@ -47,7 +52,9 @@ func StringSum(input string) (output string, err error) {
 
 		if v == 45 || v == 43 { // minus or plus
 			if op > 0 {
-				return "", errorNotTwoOperands
+				if err != nil {
+					return "", fmt.Errorf("%w", errorNotTwoOperands)
+				}
 			}
 			op = int(v)
 			a, _ = strconv.Atoi(container)
@@ -59,7 +66,9 @@ func StringSum(input string) (output string, err error) {
 	}
 
 	if op == 0 {
-		return "", errorNotTwoOperands
+		if err != nil {
+			return "", fmt.Errorf("%w", errorNotTwoOperands)
+		}
 	}
 
 	b, _ = strconv.Atoi(container)
