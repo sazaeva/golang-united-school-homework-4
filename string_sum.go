@@ -2,8 +2,8 @@ package string_sum
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
+	"strings"
 )
 
 //use these errors as appropriate, wrapping them with fmt.Errorf function
@@ -25,36 +25,53 @@ var (
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
 func StringSum(input string) (output string, err error) {
-	n := ""
-	s := []int{}
-	set := 0
-	out := 0
-	for i, aR := range input {
-		if aR >= 48 && aR <= 58 {
-			n += fmt.Sprint(int(aR - 48))
-			set = 1
-		} else if set == 1 {
-			w, err := strconv.Atoi(n)
-			fmt.Println(errorNotTwoOperands)
-			if err != nil {
-				fmt.Println(errorEmptyInput)
-			}
+	input = strings.ReplaceAll(input, " ", "")
 
-			s = append(s, w)
-			n = ""
-			set = 0
-		}
-		if i == len(input)-1 {
-			w, _ := strconv.Atoi(n)
-
-			s = append(s, w)
-		}
+	if input == "" || input == "-" || input == "+" {
+		return input, errorEmptyInput
 	}
-	for _, sR := range s {
-		out += sR
-		output = strconv.Itoa(out)
+
+	var container string
+	var a, b, op int
+	n := 1
+
+	for i, v := range input {
+		if i == 0 && v == 43 || v > 58 {
+			return "", errorNotTwoOperands
+		}
+
+		if i == 0 && v == 45 { // first character is minus
+			n = -1 // first operand is negative
+			continue
+		}
+
+		if v == 45 || v == 43 { // minus or plus
+			if op > 0 {
+				return "", errorNotTwoOperands
+			}
+			op = int(v)
+			a, _ = strconv.Atoi(container)
+			container = ""
+			continue
+		}
+
+		container += string(v)
+	}
+
+	if op == 0 {
+		return "", errorNotTwoOperands
+	}
+
+	b, _ = strconv.Atoi(container)
+
+	a *= n
+
+	switch op {
+	case 45:
+		output = strconv.Itoa(a - b)
+	case 43:
+		output = strconv.Itoa(a + b)
 	}
 
 	return output, nil
-
 }
