@@ -3,6 +3,7 @@ package string_sum
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -25,62 +26,29 @@ var (
 //
 // Use the errors defined above as described, again wrapping into fmt.Errorf
 
-func StringSum(input string) (output string, err error) {
+func StringSum(input string) (string, error) {
+
 	input = strings.ReplaceAll(input, " ", "")
-
-	if input == "" || input == "-" || input == "+" {
-		if err != nil {
-			return input, fmt.Errorf("%w", errorEmptyInput)
-		}
+	if input == "" {
+		return "", fmt.Errorf("%w", errorEmptyInput)
 	}
 
-	var container string
-	var a, b, op int
-	n := 1
+	reg := regexp.MustCompile(`[+-]?\d+[^+-]`)
+	slice := reg.FindAllString(input, -1)
 
-	for i, v := range input {
-		if i == 0 && v == 43 || v > 57 || len(input) > 1 {
-			if err != nil {
-				return "", fmt.Errorf("%w", errorNotTwoOperands)
-			}
-		}
-
-		if i == 0 && v == 45 { // first character is minus
-			n = -1 // first operand is negative
-			continue
-		}
-
-		if v == 45 || v == 43 { // minus or plus
-			if op > 0 {
-				if err != nil {
-					return "", fmt.Errorf("%w", errorNotTwoOperands)
-				}
-			}
-			op = int(v)
-			a, _ = strconv.Atoi(container)
-			container = ""
-			continue
-		}
-
-		container += string(v)
+	if len(slice) != 2 {
+		return "", fmt.Errorf("%w", errorNotTwoOperands)
 	}
 
-	if op == 0 {
-		if err != nil {
-			return "", fmt.Errorf("%w", errorNotTwoOperands)
-		}
+	operand1, err := strconv.Atoi(strings.TrimSpace(slice[0]))
+	if err != nil {
+		return "", fmt.Errorf("%w", err)
 	}
 
-	b, _ = strconv.Atoi(container)
-
-	a *= n
-
-	switch op {
-	case 45:
-		output = strconv.Itoa(a - b)
-	case 43:
-		output = strconv.Itoa(a + b)
+	operand2, err := strconv.Atoi(strings.TrimSpace(slice[1]))
+	if err != nil {
+		return "", fmt.Errorf("%w", err)
 	}
 
-	return output, nil
+	return strconv.Itoa(operand1 + operand2), nil
 }
